@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 
 // Вставте ваш токен тут
-const token = '6764649135:AAFey_nMeNsc3RoW_mXhA5WwSh9v9NEt6BA';
+const token = 'YOUR_TOKEN';
 const bot = new TelegramBot(token, { polling: true });
 
 // Функція для конвертації тривалості у години
