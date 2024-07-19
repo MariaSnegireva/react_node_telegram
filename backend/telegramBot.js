@@ -2,47 +2,53 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 
 // Вставте ваш токен тут
-const token = 'YOUR_TOKEN';
+ const token = 'YOUR_TOKEN';
+// https://api.telegram.org/bot
 const bot = new TelegramBot(token, { polling: true });
 
-// Функція для конвертації тривалості у години
-const parseDuration = (duration) => {
-    const [hours, minutes] = duration.split(' ');
-    const hoursValue = parseInt(hours, 10);
-    const minutesValue = parseInt(minutes, 10);
-    return hoursValue + (minutesValue / 60);
-};
-
-// Обробка отриманих повідомлень
 bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    const messageText = msg.text;
+  const chatId = msg.chat.id;
+  const messageText = msg.text;
 
-    const keywords = ['ВВІМКНЕННЯ ЕЛЕКТРОЕНЕРГІЇ', 'ВИМКНЕННЯ ЕЛЕКТРОЕНЕРГІЇ'];
+  // Обробка повідомлення для витягнення даних
+  const { hour, duration } = parseMessage(messageText);
 
-    // Перевірка на ключові слова
-    if (keywords.some(keyword => messageText.includes(keyword))) {
-        const durationMatch = messageText.match(/Тривалість відключення: (\d+ год \d+ хв)/);
-        if (durationMatch) {
-            const durationText = durationMatch[1];
-            const durationInHours = parseDuration(durationText);
-            const timeMatch = messageText.match(/Час: (\d+:\d+:\d+)/);
-            if (timeMatch) {
-                const time = timeMatch[1];
-                const hour = parseInt(time.split(':')[0], 10);
-
-                // Відправка даних на сервер
-                axios.post('http://localhost:5000/generate-chart', {
-                    hour: hour,
-                    duration: durationInHours
-                })
-                .then(response => {
-                    console.log('Data sent successfully:', response.data);
-                })
-                .catch(error => {
-                    console.error('Error sending data:', error);
-                });
-            }
-        }
-    }
+  if (hour && duration) {
+      // Відправка даних на сервер
+      axios.post('http://localhost:5000/generate-chart', {
+          hour: hour,
+          duration: duration
+      })
+      .then(response => {
+          bot.sendMessage(chatId, 'Дані успішно відправлені на сервер.');
+      })
+      .catch(error => {
+          console.error('Error sending data to server:', error);
+          bot.sendMessage(chatId, 'Помилка при відправці даних на сервер.');
+      });
+  } else {
+      bot.sendMessage(chatId, 'Не вдалося обробити повідомлення.');
+  }
 });
+
+// Функція для парсингу повідомлень
+function parseMessage(message) {
+  const timePattern = /(\d{2}:\d{2})/;
+  const durationPattern = /(\d+год \d+хв)/;
+
+  const timeMatch = message.match(timePattern);
+  const durationMatch = message.match(durationPattern);
+
+  if (timeMatch && durationMatch) {
+      const hour = timeMatch[1];
+      const duration = parseDuration(durationMatch[1]);
+      return { hour, duration };
+  }
+  return { hour: null, duration: null };
+}
+
+// Функція для перетворення тривалості у години
+function parseDuration(durationStr) {
+  const [hours, minutes] = durationStr.split(' ').map(part => parseInt(part.replace(/[^0-9]/g, '')));
+  return hours + minutes / 60; // Тривалість у годинах
+}

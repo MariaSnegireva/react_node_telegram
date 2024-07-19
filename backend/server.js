@@ -1,70 +1,66 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const ChartJSNodeCanvas = require('chartjs-node-canvas').ChartJSNodeCanvas;
 
 const app = express();
+const port = 5000;
+
 app.use(bodyParser.json());
 app.use(cors());
 
-const width = 800;
-const height = 600;
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
+let updateData = []; // Масив для зберігання даних оновлень
 
-// Маршрут для кореневої URL
+// Простий маршрут для кореневого URL
+app.get('/', (req, res) => {
+    res.send('Server is running. Use /generate-chart to post data and /chart-data to get chart data.');
+});
+
+// Отримання даних від Telegram бота
+app.post('/generate-chart', (req, res) => {
+    const { hour, duration } = req.body;
+    updateData.push({ hour, duration });
+    res.sendStatus(200);
+});
+
+// Повернення оброблених даних для побудови графіку
 app.get('/chart-data', (req, res) => {
-  // Приклад даних для графіку
-  // Замініть цей код на реальні дані з вашої бази даних або інших джерел
-  const data = {
-    labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-    data: Array(24).fill(0)
-  };
-
-  res.json(data);
+    const labels = updateData.map(data => data.hour);
+    const durations = updateData.map(data => data.duration);
+    res.json({ labels, data: durations });
 });
 
-// Маршрут для генерації графіку
+// Генерація графіку
 app.post('/generate-chart', async (req, res) => {
-  const { hour, duration } = req.body;
+    try {
+        const { hour, duration } = req.body;
+        updateData.push({ hour, duration });
 
-  // Створення даних для графіку
-  const data = Array(24).fill(0);
-  data[hour] = duration;
+        const width = 800;
+        const height = 600;
+        const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
+        const configuration = {
+            type: 'line',
+            data: {
+                labels: updateData.map(data => data.hour),
+                datasets: [{
+                    label: 'Duration of Updates',
+                    data: updateData.map(data => data.duration),
+                    borderColor: 'rgba(75,192,192,1)',
+                    backgroundColor: 'rgba(75,192,192,0.2)',
+                }]
+            }
+        };
 
-  const chartConfig = {
-    type: 'bar',
-    data: {
-      labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-      datasets: [{
-        label: 'Тривалість відключень',
-        data: data,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        x: {
-          beginAtZero: true
-        },
-        y: {
-          beginAtZero: true
-        }
-      }
+        const image = await chartJSNodeCanvas.renderToBuffer(configuration);
+        res.set('Content-Type', 'image/png');
+        res.send(image);
+    } catch (error) {
+        console.error('Error generating chart:', error);
+        res.status(500).send('Error generating chart');
     }
-  };
-
-  try {
-    const imageBuffer = await chartJSNodeCanvas.renderToBuffer(chartConfig);
-    res.set('Content-Type', 'image/png');
-    res.send(imageBuffer);
-  } catch (error) {
-    console.error('Error generating chart:', error);
-    res.status(500).send('Error generating chart');
-  }
 });
 
-app.listen(5000, () => {
-  console.log('Server is running on http://localhost:5000');
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
