@@ -84,14 +84,16 @@ The client will be running on <http://localhost:3000>.
 
 ## Usage
 
-Sending Data to the Server
+Sending Data to the Server:
+
 To send data to the server, use the following command:
 
 ```bash
   curl -X POST http://localhost:5000/generate-chart -H "Content-Type: application/json" -d '{"hour": "13:43", "duration": "1h 45m"}'
 ```
 
-Fetching Chart Data
+Fetching Chart Data:
+
 To fetch chart data, use the following command:
 
 ```bash
