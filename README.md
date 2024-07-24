@@ -4,30 +4,33 @@ This project is designed to collect and display analytics from Telegram bot mess
 
 ## Installation
 
-1. Clone the repository:
+1.Clone the repository:
 
 ```bash
-git clone https://github.com/MariaSnegireva/react_node_telegram.git
+  git clone https://link-to-project
+```
 
-2. Navigate to the project directory:
+2.Navigate to the project directory:
 
-cd react_node_telegram
+```bash
+  cd my-project
+```
 
 ## Backend
 
-1. Navigate to the backend directory:
+1.Navigate to the backend directory:
 
 ```bash
   cd backend
 ```
 
-2. Install dependencies:
+2.Install dependencies:
 
 ```bash
   npm install
 ```
 
-3. Start the server:
+3.Start the server:
 
 ```bash
   node server.js
@@ -37,25 +40,47 @@ The server will be running on <http://localhost:5000>. Use </generate-chart> for
 
 ## Frontend
 
-1. Navigate to the root directory of the project:
+1.Navigate to the root directory of the project:
 
 ```bash
   cd ../
 ```
 
-2. Install dependencies:
+2.Install dependencies:
 
 ```bash
   npm install
 ```
 
-3. Start the client application:
+3.Start the client application:
 
 ```bash
   npm start
 ```
 
 The client will be running on <http://localhost:3000>.
+
+## Deploy
+
+1.Install:
+
+```bash
+  npm install gh-pages --save-dev
+```
+
+2.Add scripts to package.json:
+
+'
+"homepage": "https://[username or name of organization].github.io/[name of repo]/",
+ "predeploy": "npm run build",
+ "deploy": "gh-pages -d build"
+'
+
+4.Run Build:
+
+```bash
+  npm run build
+```
 
 ## Usage
 
@@ -85,4 +110,4 @@ App.css - Styles for the React application
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-#### [DEMO LINK](https://MariaSnegireva.github.io/react_node_telegram)
+### [DEMO LINK](https://MariaSnegireva.github.io/react_node_telegram)
