@@ -1,72 +1,84 @@
-# Getting Started with Create React App
+# React Node Telegram Bot Analytics
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is designed to collect and display analytics from Telegram bot messages. It includes a Node.js server for data processing and a React client for displaying charts.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+1. Clone the repository:
 
-### `npm start`
+```bash
+git clone https://github.com/MariaSnegireva/react_node_telegram.git
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Navigate to the project directory:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+cd react_node_telegram
 
-### `npm test`
+## Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Navigate to the backend directory:
 
-### `npm run build`
+```bash
+  cd backend
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+  npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Start the server:
 
-### `npm run eject`
+```bash
+  node server.js
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The server will be running on <http://localhost:5000>. Use </generate-chart> for POST requests and </chart-data> to get chart data.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Frontend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Navigate to the root directory of the project:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+  cd ../
+```
 
-## Learn More
+2. Install dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+  npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Start the client application:
 
-### Code Splitting
+```bash
+  npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The client will be running on <http://localhost:3000>.
 
-### Analyzing the Bundle Size
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Sending Data to the Server
+To send data to the server, use the following command:
 
-### Making a Progressive Web App
+curl -X POST <http://localhost:5000/generate-chart> -H "Content-Type: application/json" -d '{"hour": "13:43", "duration": "1h 45m"}'
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Fetching Chart Data
+To fetch chart data, use the following command:
 
-### Advanced Configuration
+curl <http://localhost:5000/chart-data>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Project Structure
 
-### Deployment
+backend/ - Directory containing the server-side code
+server.js - Main server file
+src/ - Directory containing the client-side code
+App.jsx - Main React component
+App.css - Styles for the React application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[MIT](https://choosealicense.com/licenses/mit/)
 
 #### [DEMO LINK](https://MariaSnegireva.github.io/react_node_telegram)
